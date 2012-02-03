@@ -1,56 +1,21 @@
 <!DOCTYPE html>
-<html>
 <head>
-  <meta charset='utf-8'>
-
-  <title>ninumedia/NattyJS @ GitHub</title>
-
-  <style type="text/css">
-    body {
-      margin-top: 1.0em;
-      background-color: #7f8c54;
-      font-family: Helvetica, Arial, FreeSans, san-serif;
-      color: #ffffff;
-    }
-    #container {
-      margin: 0 auto;
-      width: 700px;
-    }
-    h1 { font-size: 3.8em; color: #8073ab; margin-bottom: 3px; }
-    h1 .small { font-size: 0.4em; }
-    h1 a { text-decoration: none }
-    h2 { font-size: 1.5em; color: #8073ab; }
-    h3 { text-align: center; color: #8073ab; }
-    a { color: #8073ab; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
-    .download { float: right; }
-    pre { background: #000; color: #fff; padding: 15px;}
-    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
-    .footer { text-align:center; padding-top:30px; font-style: italic; }
-  </style>
+<script src="natty.js"></script>	
 </head>
-
 <body>
-  <a href="https://github.com/ninumedia/NattyJS"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+	
+<pre>
+<div style='padding: 20px; background-color: black; color: green; font-size: 16px; white-space: pre'>
+	
+/*! NattyJS -- NiNu's Anti-Templating 
 
-  <div id="container">
+Copyright (c) Marc Fawzi, NiNu, Inc. 2011-2012
 
-    <div class="download">
-      <a href="https://github.com/ninumedia/NattyJS/zipball/master">
-        <img border="0" width="90" src="https://github.com/images/modules/download/zip.png"></a>
-      <a href="https://github.com/ninumedia/NattyJS/tarball/master">
-        <img border="0" width="90" src="https://github.com/images/modules/download/tar.png"></a>
-    </div>
+BSD License
 
-    <h1><a href="https://github.com/ninumedia/NattyJS">NattyJS</a>
-      <span class="small">by <a href="https://github.com/ninumedia">ninumedia</a></span></h1>
+*/
 
-    <div class="description">
-      NiNu's Anti-Templating Framework
-    </div>
-
-    
-      <p>/******************************************************************************
+/******************************************************************************
  * 
  * README:
  * 
@@ -160,50 +125,415 @@
  *
  * 
  *********************************************************************************/
+
+<div style='font-size: 17px'>
+The current test operates on the following DOM structure: 
+
+&lt;div class='<span>i</span>$someClass' natty-node-id='someNode' style='display: none'&gt;
+                	
+	&lt;div class='n$someClass'&gt;
+		&lt;span onclick='n$someHandler'&gt;n$someInfo&lt;/span&gt;
+		&lt;div class='someClass n$statusClass' onclick='n$someHandler'&gt;
+		&lt;div id='n$someDiv'&gt;n$content&lt;/div&gt;
+		&lt;/div&gt;
+		&lt;!-- @natty someOtherNode --&gt;
+	&lt;/div&gt;
+	
+&lt;/div&gt;
+
+&lt;div natty-node-id='someOtherNode' style='display: none'&gt;
+                	
+	&lt;div&gt;
+		&lt;span onclick='n$someHandler'&gt;n$someStuff&lt;/span&gt;
+	&lt;/div&gt;
+	
+&lt;/div&gt;
+
+where <span>i</span>$variables are initialization-time variables and n$variables are dynamic Node variables 
+
+using the following Javascript:
+
+// cache DOM elements with natty-node-id (i.e. all node prototypes) and supply values for init() variables (i$var)
+Natty.init({someClass: 'newClass'});			
+
+// Selectors are merely the value of the natty-selector attribute within the node (not actual CSS selectors)
+// They may match none, one or many populated child nodes. if no populated instances of Node Prototype were 
+// inserted into the Node or if the selector string doesn't match any instance then an error is thrown
+
+// The methods themselves can be repeated infinitely, each time creating an instance of the Node Prototype and
+// inserting it into the Node
+
+// populate the Node Prototype of the Linked Node first  	
+document.querySelector('[natty-node-id=someOtherNode]').n$(
+	{
+		someStuff: 'dynamically linked node contents', 
+		someHandler: 'clickMe(this)'
+	}, 
+	{
+		mode: 'replace',
+		ownSelector: 'someOtherNodePrototypeInstance',
+		nodeSelector: 'someOtherNode'
+	})
+
+// normal replace on the Node ... pass Node variables (n$var)
+document.querySelector('[natty-node-id=someNode]').n$(
+	{
+		someInfo: 'span content 1', 
+		content: "div content 1",
+		someHandler: 'clickMe(this)'
+	}, 
+	{
+		mode: 'replace', 
+		ownState: 'viola', 
+		ownSelector: 'NodePrototypeInstance1',
+		nodeSelector: 'someNode' 
+	})
+
+// normal append on the Node ... pass Node variables (n$var)
+document.querySelector('[natty-node-id=someNode]').n$(
+	{
+		someInfo: 'span content 3', 
+		content: "div content 3",
+		someHandler: 'clickMe(this)'
+	}, 
+	{
+		mode: 'append', 
+		ownState: 'viola', 
+		ownSelector: 'NodePrototypeInstance3' 
+	})
+
+// normal prepend on the Node ... pass Node variables (n$var)
+document.querySelector('[natty-node-id=someNode]').n$(
+	{
+		someInfo: 'span content 0', 
+		content: 'div content 0',
+		someHandler: 'clickMe(this)'
+	}, 
+	{
+		mode: 'prepend', 
+		ownState: 'viola', 
+		ownSelector: 'NodePrototypeInstance0' 
+	})
+	
+
+// random access append on the Node ... pass Node variables (n$var)
+
+document.querySelector('[natty-node-id=someNode]').n$(
+	{
+		someInfo: 'span content 2', 
+		content: "div content 2",
+		someHandler: 'clickMe(this)'
+	}, 
+	{
+		mode: 'append', 
+		targetSelector: 'NodePrototypeInstance1', 
+		ownState: 'viola', 
+		ownSelector: 'NodePrototypeInstance2' 
+	})
+
+// normal prepend on the Node ... pass Node variables (n$var)
+document.querySelector('[natty-node-id=someNode]').n$(
+	{
+		someInfo: 'span content -1', 
+		content: "div content -1",
+		someHandler: 'clickMe(this)'
+	}, 
+	{
+		mode: 'prepend', 
+		ownState: 'viola', 
+		ownSelector: 'NodePrototypeInstance-1' 
+	})
+
+// random access replace on the Node ... pass Node variables (n$var)
+document.querySelector('[natty-node-id=someNode]').n$(
+	{
+		someInfo: 'span content sub-0', 
+		content: "div content sub-0",
+		someHandler: 'clickMe(this)'
+	}, 
+	{
+		mode: 'replace', 
+		targetSelector: 'NodePrototypeInstance-1', 
+		ownState: 'viola', 
+		ownSelector: 'NodePrototypeInstance-sub-zero' 
+	})
+
+// random access append on the Node ... pass Node variables (n$var)
+document.querySelector('[natty-node-id=someNode]').n$(
+	{
+		someInfo: 'span content -1', 
+		content: "div content -1",
+		someHandler: 'clickMe(this)'
+	}, {
+		mode: 'append', 
+		targetSelector: 'NodePrototypeInstance-sub-zero', 
+		ownState: 'viola', 
+		ownSelector: 'NodePrototypeInstance-1' 
+	})
+
+// random access prepend on the Node ... pass Node variables (n$var)
+document.querySelector('[natty-node-id=someNode]').n$(
+	{
+		someInfo: 'span content 2.5', 
+		content: "div content 2.5",
+		someHandler: 'clickMe(this)'
+	}, 
+	{
+		mode: 'prepend', 
+		targetSelector: 'NodePrototypeInstance3', 
+		ownState: 'viola', 
+		ownSelector: 'NodePrototypeInstance2.5' 
+	})
+	
+document.querySelector('[natty-node-id=someNode]').style.display = 'block'
+
+// natty will append "_linked" to the natty-selector and natty-state attributes of Linked Nodes (upon linking) which are 
+// otherwise clones of the Nodes being linked (which are left untouched) Natty also removes the natty-node-id in the
+// Linked Nodes (to avoid conflict with the original Nodes being linked)
+
+// make visible all instances of the Linked Node, using the forEachExec natty method (no eval, safe)
+document.querySelectorAll('[natty-selector=someOtherNode_linked]').forEachExec("style.display = 'block'");
+
+// for this demo
+function multiReplace() {
+	
+	// random access multi-replace on the Node ... pass Node variables (n$var)
+	document.querySelector('[natty-node-id=someNode]').n$(
+		{
+			someInfo: 'span content REPLACED', 
+			content: "div content REPLACED",
+			someHandler: 'clickMe(this)'
+		}, 
+		{
+			mode: 'replace', 
+			targetState: 'viola', 
+			ownState: 'violaREPLACED', 
+			ownSelector: 'NodePrototypeInstanceREPLACED' 
+		})
+	
+	// make visible all instances of the Linked Node	
+	document.querySelectorAll('[natty-selector=someOtherNode_linked]').forEachExec("style.display = 'block'");
+	
+}
+
+function clickMe(elem) {
+	
+	var str = 'my ownSelector = ' + 
+			elem.parentNode.getAttribute('natty-selector') + 
+			'\n' + 
+			'my nodeSelector = ' 
+			+ elem.parentNode.parentNode.getAttribute('natty-selector')
+	
+	
+}
+</div>
+</div>
+</pre>		
+
+<p>click on each line below to see it's details 
 </p>
-    
+<p>a more animated/complete	test will replace this ghetto test soon...
+</p>
+	
+<div class='i$someClass' natty-node-id='someNode' style='display: none'>
+                	
+	<div class='n$someClass'>
+		<span onclick='n$someHandler'>n$someInfo</span><div class='someClass n$statusClass' onclick='n$someHandler'><div id='n$someDiv'>n$content</div></div>
+		<!-- @natty someOtherNode -->
+	</div>
+	
+</div>
 
-    
-      <h2>Dependencies</h2>
-      <p>none, unless you wish to use the jQuery plugins (work in progress)</p>
-    
+<div natty-node-id='someOtherNode' style='display: none'>
+                	
+	<div>
+		<span onclick='n$someHandler'>n$someStuff</span>
+	</div>
+	
+</div>
 
-    
-      <h2>Install</h2>
-      <p>Just link the natty.js file in script tags or however you want to do it</p>
-    
 
-    
-      <h2>License</h2>
-      <p>BSD</p>
-    
+<div style='position: relative; top: 50px'>	
+	<input type='button' value='multi-replace' onclick='multiReplace()'/>
+	<div style='position: relative; top: 600px'>__</div>	
+</div>
 
-    
-      <h2>Authors</h2>
-      <p>Marc Fawzi (marc.fawzi@gmail.com)<br/>      </p>
-    
+<script type="text/javascript">
 
-    
-      <h2>Contact</h2>
-      <p> (admin@ninumedia.com)<br/>      </p>
-    
+// cache DOM elements with natty-node-id (i.e. all node prototypes) and supply values for init() variables (i$var)
+Natty.init({someClass: 'newClass'});			
 
-    <h2>Download</h2>
-    <p>
-      You can download this project in either
-      <a href="https://github.com/ninumedia/NattyJS/zipball/master">zip</a> or
-      <a href="https://github.com/ninumedia/NattyJS/tarball/master">tar formats.
-    </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
-      by running:
-      <pre>$ git clone git://github.com/ninumedia/NattyJS</pre>
-    </p>
+// Selectors are merely the value of the natty-selector attribute within the node (not actual CSS selectors)
+// They may match none, one or many populated child nodes. if no populated instances of Node Prototype were 
+// inserted into the Node or if the selector string doesn't match any instance then an error is thrown
 
-    <div class="footer">
-      get the source code on GitHub : <a href="https://github.com/ninumedia/NattyJS">ninumedia/NattyJS</a>
-    </div>
+// The methods themselves can be repeated infinitely, each time creating an instance of the Node Prototype and
+// inserting it into the Node
 
-  </div>
+// populate the Node Prototype of the Linked Node first  	
+document.querySelector('[natty-node-id=someOtherNode]').n$(
+	{
+		someStuff: 'dynamically linked node contents', 
+		someHandler: 'clickMe(this)'
+	}, 
+	{
+		mode: 'replace',
+		ownSelector: 'someOtherNodePrototypeInstance',
+		nodeSelector: 'someOtherNode'
+	})
 
+// normal replace on the Node ... pass Node variables (n$var)
+document.querySelector('[natty-node-id=someNode]').n$(
+	{
+		someInfo: 'span content 1', 
+		content: "div content 1",
+		someHandler: 'clickMe(this)'
+	}, 
+	{
+		mode: 'replace', 
+		ownState: 'viola', 
+		ownSelector: 'NodePrototypeInstance1',
+		nodeSelector: 'someNode' 
+	})
+
+// normal append on the Node ... pass Node variables (n$var)
+document.querySelector('[natty-node-id=someNode]').n$(
+	{
+		someInfo: 'span content 3', 
+		content: "div content 3",
+		someHandler: 'clickMe(this)'
+	}, 
+	{
+		mode: 'append', 
+		ownState: 'viola', 
+		ownSelector: 'NodePrototypeInstance3' 
+	})
+
+// normal prepend on the Node ... pass Node variables (n$var)
+document.querySelector('[natty-node-id=someNode]').n$(
+	{
+		someInfo: 'span content 0', 
+		content: 'div content 0',
+		someHandler: 'clickMe(this)'
+	}, 
+	{
+		mode: 'prepend', 
+		ownState: 'viola', 
+		ownSelector: 'NodePrototypeInstance0' 
+	})
+	
+
+// random access append on the Node ... pass Node variables (n$var)
+
+document.querySelector('[natty-node-id=someNode]').n$(
+	{
+		someInfo: 'span content 2', 
+		content: "div content 2",
+		someHandler: 'clickMe(this)'
+	}, 
+	{
+		mode: 'append', 
+		targetSelector: 'NodePrototypeInstance1', 
+		ownState: 'viola', 
+		ownSelector: 'NodePrototypeInstance2' 
+	})
+
+// normal prepend on the Node ... pass Node variables (n$var)
+document.querySelector('[natty-node-id=someNode]').n$(
+	{
+		someInfo: 'span content -1', 
+		content: "div content -1",
+		someHandler: 'clickMe(this)'
+	}, 
+	{
+		mode: 'prepend', 
+		ownState: 'viola', 
+		ownSelector: 'NodePrototypeInstance-1' 
+	})
+
+// random access replace on the Node ... pass Node variables (n$var)
+document.querySelector('[natty-node-id=someNode]').n$(
+	{
+		someInfo: 'span content sub-0', 
+		content: "div content sub-0",
+		someHandler: 'clickMe(this)'
+	}, 
+	{
+		mode: 'replace', 
+		targetSelector: 'NodePrototypeInstance-1', 
+		ownState: 'viola', 
+		ownSelector: 'NodePrototypeInstance-sub-zero' 
+	})
+
+// random access append on the Node ... pass Node variables (n$var)
+document.querySelector('[natty-node-id=someNode]').n$(
+	{
+		someInfo: 'span content -1', 
+		content: "div content -1",
+		someHandler: 'clickMe(this)'
+	}, {
+		mode: 'append', 
+		targetSelector: 'NodePrototypeInstance-sub-zero', 
+		ownState: 'viola', 
+		ownSelector: 'NodePrototypeInstance-1' 
+	})
+
+// random access prepend on the Node ... pass Node variables (n$var)
+document.querySelector('[natty-node-id=someNode]').n$(
+	{
+		someInfo: 'span content 2.5', 
+		content: "div content 2.5",
+		someHandler: 'clickMe(this)'
+	}, 
+	{
+		mode: 'prepend', 
+		targetSelector: 'NodePrototypeInstance3', 
+		ownState: 'viola', 
+		ownSelector: 'NodePrototypeInstance2.5' 
+	})
+	
+
+document.querySelector('[natty-node-id=someNode]').style.display = 'block'
+
+// natty will append "_linked" to the natty-selector and natty-state attributes of Linked Nodes (upon linking) which are 
+// otherwise clones of the Nodes being linked (which are left untouched) Natty also removes the natty-node-id in the
+// Linked Nodes (to avoid conflict with the original Nodes being linked)
+
+// make visible all instances of the Linked Node, using the forEachExec natty method (no eval, safe)
+document.querySelectorAll('[natty-selector=someOtherNode_linked]').forEachExec("style.display = 'block'");
+
+// for this demo
+function multiReplace() {
+	
+	// random access multi-replace on the Node ... pass Node variables (n$var)
+	document.querySelector('[natty-node-id=someNode]').n$(
+		{
+			someInfo: 'span content REPLACED', 
+			content: "div content REPLACED",
+			someHandler: 'clickMe(this)'
+		}, 
+		{
+			mode: 'replace', 
+			targetState: 'viola', 
+			ownState: 'violaREPLACED', 
+			ownSelector: 'NodePrototypeInstanceREPLACED' 
+		})
+	
+	// make visible all instances of the Linked Node	
+	document.querySelectorAll('[natty-selector=someOtherNode_linked]').forEachExec("style.display = 'block'");
+	
+}
+
+function clickMe(elem) {
+	
+	alert('my ownSelector = ' + elem.parentNode.getAttribute("natty-selector") + "\n" + 'my nodeSelector = ' + elem.parentNode.parentNode.getAttribute("natty-selector"))
+	
+	
+}
+ 						
+</script>
+
+ </body>
+ </html>		
 </body>
-</html>
+
