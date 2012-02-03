@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+
+  <title>ninumedia/NattyJS @ GitHub</title>
+
+  <style type="text/css">
+    body {
+      margin-top: 1.0em;
+      background-color: #7f8c54;
+      font-family: Helvetica, Arial, FreeSans, san-serif;
+      color: #ffffff;
+    }
+    #container {
+      margin: 0 auto;
+      width: 700px;
+    }
+    h1 { font-size: 3.8em; color: #8073ab; margin-bottom: 3px; }
+    h1 .small { font-size: 0.4em; }
+    h1 a { text-decoration: none }
+    h2 { font-size: 1.5em; color: #8073ab; }
+    h3 { text-align: center; color: #8073ab; }
+    a { color: #8073ab; }
+    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
+    .download { float: right; }
+    pre { background: #000; color: #fff; padding: 15px;}
+    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
+    .footer { text-align:center; padding-top:30px; font-style: italic; }
+  </style>
+</head>
+
+<body>
+  <a href="https://github.com/ninumedia/NattyJS"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+
+  <div id="container">
+
+    <div class="download">
+      <a href="https://github.com/ninumedia/NattyJS/zipball/master">
+        <img border="0" width="90" src="https://github.com/images/modules/download/zip.png"></a>
+      <a href="https://github.com/ninumedia/NattyJS/tarball/master">
+        <img border="0" width="90" src="https://github.com/images/modules/download/tar.png"></a>
+    </div>
+
+    <h1><a href="https://github.com/ninumedia/NattyJS">NattyJS</a>
+      <span class="small">by <a href="https://github.com/ninumedia">ninumedia</a></span></h1>
+
+    <div class="description">
+      NiNu's Anti-Templating Framework
+    </div>
+
+    
+      <p>/******************************************************************************
+ * 
+ * README:
+ * 
+ * This version works in Gecko and Webkit, not tested on IE
+ *
+ * NattyJS - NiNu's Anti-Templating
+ *
+ * "All the separation and none of the baggage" 
+ *
+ * What is it? 
+ *
+ * Data-Driven DOM-Based "Templating" Without The Templates    
+ *
+ * How Does It Work?
+ * 
+ * Natty works by caching the virgin innerHTML (the Node Prototype) of all DOM 
+ * elements (the Nodes) that have a 'natty-node-id' attribute at window.onload 
+ * or $(document).ready. Each Node must contain exactly one direct child at time 
+ * of caching, i.e. the Node Prototype, which must contain special variables (in 
+ * its inner/outer HTML) to be replaced, in global, dynamic fashion, with JSON 
+ * data within the inner/outer HTML scope of a newly created instance of the Node
+ * Prototype. 
+ *
+ * The Node Prototype may hold an arbitrarily complex DOM structure, and one in 
+ * which Node(s) defined elsewhere in the DOM may be dynamically linked by 
+ * reference (called Linked Nodes)
+ *
+ * Natty works by populating the special variables in a newly created instance 
+ * of the Node Prototype with dynamic JSON data (where the JSON keys must 
+ * correspond to the special variables in the Node Prototype) and then inserting 
+ * the newly populated instance into the Node itself, using replace (default on 
+ * first insertion), append or prepend methods, as applied to the Node's entire 
+ * content (the virgin innerHTML or all populated instances of the Node Prototype
+ * that were previously inserted into the Node) or specific, previously inserted
+ * instance(s) of the Node Prototype.
+ *
+ * Natty allows the DOM to be decomposed into Nodes each having a Node Prototype
+ * from which instances can be created, populated with JSON data and then 
+ * inserted into the Node (in append, prepend, and replace modes, with the 
+ * ability to target specific instances of the Node Prototype or the Node's 
+ * entire content) where the Node itself can be dynamically linked into other 
+ *  Nodes and so on...
+ * 
+ * Examples: 
+ *
+ * Take a look at test.html
+ *
+ * See Notes under String.prototype._nattyMapValues for the expected JSON format
+ * 
+ * Main Invocation Pattern
+ *
+ * .n$ 
+ *
+ * document.querySelector('#someNode').n$(data [, options])
+ *
+ * behavior: creates new instance of Prototype Node using data to populate the 
+ * special variables in Prototype Node, then append/prepend to (or replace) 
+ * existing instance(s) in the Node
+ *
+ * >> data: {key: value, key: value, key: value, etc} 
+ * where the keys must match the natty node variables in the Node Prototype minus
+ * the n$ prefix
+ *
+ * >> options: {mode: 'replace'|'append'|'prepend', targetSelector: value, 
+ * ownSelector: value, nodeSelector: value, targetState: value, ownState: value, 
+ * nodeState: value}
+ *
+ * if there no populated instances of Prototype Node exist (or if the Node's 
+ * innerHTML was deleted after or before populated instances of Prototype Node 
+ * were inserted) then append/prepend/replace will all replace the Node's 
+ * entire content (if targetSelector is supplied in this case it will throw 
+ * an error, so unless you are sure, you may want to call .$isPopulated() before 
+ * invoking this method with targetSelector or stateSelector options)
+ *
+ * targetSelector: optional natty-selector value for instance(s) of Prototpe Node
+ * to insert the new instance at in append and prepend modes. If null, then 
+ * append/prepend new instance at last/1st instance
+ *
+ * targetSelector: optional natty-selector value for instance(s) of Prototpe 
+ * Node to insert into in replace mode. If null, replace entire content of Node
+ *
+ * ownSelector: new value of natty-selector value for instance of Prototpe Node 
+ * being inserted
+ *
+ * ownState: new value of natty-state attribute for instance of Prototpe Node 
+ * being inserted
+ *
+ * targetState: optional natty-selector value for instance of Prototpe Node to in
+ * sert at in append and prepend modes targetState: optional natty-selector value
+ * for instance of Prototpe Node to insert at in replace mode
+ *
+ * nodeSelector: new value of natty-selector for the Node itself
+ *
+ * nodeState: new value of natty-state for the Node itself
+ * 
+ *
+ *********************************************************************************
+ * 
+ * Other available are methods are 
+ *
+ * .n$delete([options]) which can delete certain instances of the Node Prototype 
+ * or all instances children (this method is untested as of this release but it 
+ * should work fine, report bugs)
+ *
+ * .n$isPopulated() may be queried before specifying targetSelector or targetState 
+ * to verify existence of populated instance(s) of Node Prototype (the targets) 
+ *
+ * 
+ *********************************************************************************/
+</p>
+    
+
+    
+      <h2>Dependencies</h2>
+      <p>none, unless you wish to use the jQuery plugins (work in progress)</p>
+    
+
+    
+      <h2>Install</h2>
+      <p>Just link the natty.js file in script tags or however you want to do it</p>
+    
+
+    
+      <h2>License</h2>
+      <p>BSD</p>
+    
+
+    
+      <h2>Authors</h2>
+      <p>Marc Fawzi (marc.fawzi@gmail.com)<br/>      </p>
+    
+
+    
+      <h2>Contact</h2>
+      <p> (admin@ninumedia.com)<br/>      </p>
+    
+
+    <h2>Download</h2>
+    <p>
+      You can download this project in either
+      <a href="https://github.com/ninumedia/NattyJS/zipball/master">zip</a> or
+      <a href="https://github.com/ninumedia/NattyJS/tarball/master">tar formats.
+    </p>
+    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
+      by running:
+      <pre>$ git clone git://github.com/ninumedia/NattyJS</pre>
+    </p>
+
+    <div class="footer">
+      get the source code on GitHub : <a href="https://github.com/ninumedia/NattyJS">ninumedia/NattyJS</a>
+    </div>
+
+  </div>
+
+</body>
+</html>
