@@ -36,8 +36,8 @@ BSD License
  * or $(document).ready. Each Node must contain exactly one direct child at time 
  * of caching, i.e. the Node Prototype, which must contain special variables (in 
  * its inner/outer HTML) to be replaced, in global, dynamic fashion, with JSON 
- * data within the inner/outer HTML scope of a newly created instance of the Node
- * Prototype. 
+ * data with the scope being the inner/outer HTML of a newly created instance of 
+ * the Node Prototype.
  *
  * The Node Prototype may hold an arbitrarily complex DOM structure, and one in 
  * which Node(s) defined elsewhere in the DOM may be dynamically linked by 
@@ -55,9 +55,11 @@ BSD License
  * Natty allows the DOM to be decomposed into Nodes each having a Node Prototype
  * from which instances can be created, populated with JSON data and then 
  * inserted into the Node (in append, prepend, and replace modes, with the 
- * ability to target specific instances of the Node Prototype or the Node's 
- * entire content) where the Node itself can be dynamically linked into other 
- *  Nodes and so on...
+ * ability to target specific, previously inserted instances of the Node Prototype 
+ * or the Node's entire content, i.e. the virgin innerHTML or all instances of
+ * the Node Prototype at once) where the Node can be dynamically linked into
+ * other Nodes (from inside the Node Prototype), which can be linked into other 
+ * Nodes, and so on...
  * 
  * Examples: 
  *
@@ -126,7 +128,7 @@ BSD License
  * 
  *********************************************************************************/
 
-<div style='font-size: 17px'>
+<div style='font-size: 17px; '>
 The current test operates on the following DOM structure: 
 
 &lt;div class='<span>i</span>$someClass' natty-node-id='someNode' style='display: none'&gt;
