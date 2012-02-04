@@ -43,8 +43,8 @@ BSD License
  * which Node(s) defined elsewhere in the DOM may be dynamically linked by 
  * reference (called Linked Nodes)
  *
- * Natty works by populating the special variables in a newly created instance 
- * of the Node Prototype with dynamic JSON data (where the JSON keys must 
+ * Natty works by creating an instance of the Node Prototype and populating the 
+ * special variables in it with dynamic JSON data (where the JSON keys must 
  * correspond to the special variables in the Node Prototype) and then inserting 
  * the newly populated instance into the Node itself, using replace (default on 
  * first insertion), append or prepend methods, as applied to the Node's entire 
