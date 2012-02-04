@@ -92,8 +92,8 @@ BSD License
  * which Node(s) defined elsewhere in the DOM may be dynamically linked by 
  * reference (called Linked Nodes)
  *
- * Natty works by populating the special variables in a newly created instance 
- * of the Node Prototype with dynamic JSON data (where the JSON keys must 
+ * Natty works by creating an instance of the Node Prototype and populating the 
+ * special variables in it with dynamic JSON data (where the JSON keys must 
  * correspond to the special variables in the Node Prototype) and then inserting 
  * the newly populated instance into the Node itself, using replace (default on 
  * first insertion), append or prepend methods, as applied to the Node's entire 
@@ -133,13 +133,20 @@ BSD License
  * ownSelector: value, nodeSelector: value, targetState: value, ownState: value, 
  * nodeState: value}
  *
+ * if there no populated instances of Prototype Node exist (or if the Node's 
+ * innerHTML was deleted after or before populated instances of Prototype Node 
+ * were inserted) then append/prepend/replace will all replace the Node's 
+ * entire content (if targetSelector is supplied in this case it will throw 
+ * an error, so unless you are sure, you may want to call .$isPopulated() before 
+ * invoking this method with targetSelector or stateSelector options)
+ *
  * targetSelector: optional natty-selector value for instance(s) of Prototpe Node
  * to insert the new instance at in append and prepend modes. If null, then 
  * append/prepend new instance at last/1st instance
  *
  * targetSelector: optional natty-selector value for instance(s) of Prototpe 
- * Node to insert into in replace mode. If null, replace entire content of Node 
- * 
+ * Node to insert into in replace mode. If null, replace entire content of Node
+ *
  * ownSelector: new value of natty-selector value for instance of Prototpe Node 
  * being inserted
  *
@@ -149,13 +156,6 @@ BSD License
  * targetState: optional natty-selector value for instance of Prototpe Node to in
  * sert at in append and prepend modes targetState: optional natty-selector value
  * for instance of Prototpe Node to insert at in replace mode
- * 
- * if there no populated instances of Prototype Node exist (or if the Node's 
- * innerHTML was deleted after or before populated instances of Prototype Node 
- * were inserted) then append/prepend/replace will all replace the Node's 
- * entire content (if targetSelector is supplied in this case it will throw 
- * an error, so unless you are sure, you may want to call .$isPopulated() before 
- * invoking this method with targetSelector or stateSelector options)
  *
  * nodeSelector: new value of natty-selector for the Node itself
  *
