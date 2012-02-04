@@ -39,9 +39,9 @@
  * from which instances (copies) can be created, populated with JSON data and then 
  * inserted into the Node (in append, prepend, and replace modes, with the 
  * ability to target specific, previously inserted instances of the Node Prototype 
- * or the Node's entire content, i.e. the virgin innerHTML or all instances of
- * the Node Prototype at once) where the Node can be dynamically linked into
- * other Nodes, which can be linked into other Nodes, and so on...
+ * or the Node's entire content, i.e. the entire set of instances of the Node 
+ * Prototype) and where the Node itself can be dynamically linked into other Nodes, 
+ * which can be linked into other Nodes, and so on...
  * 
  * Examples: 
  *
