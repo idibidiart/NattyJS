@@ -134,20 +134,13 @@ BSD License
  * ownSelector: value, nodeSelector: value, targetState: value, ownState: value, 
  * nodeState: value}
  *
- * if there no populated instances of Prototype Node exist (or if the Node's 
- * innerHTML was deleted after or before populated instances of Prototype Node 
- * were inserted) then append/prepend/replace will all replace the Node's 
- * entire content (if targetSelector is supplied in this case it will throw 
- * an error, so unless you are sure, you may want to call .$isPopulated() before 
- * invoking this method with targetSelector or stateSelector options)
- *
  * targetSelector: optional natty-selector value for instance(s) of Prototpe Node
  * to insert the new instance at in append and prepend modes. If null, then 
  * append/prepend new instance at last/1st instance
  *
  * targetSelector: optional natty-selector value for instance(s) of Prototpe 
- * Node to insert into in replace mode. If null, replace entire content of Node
- *
+ * Node to insert into in replace mode. If null, replace entire content of Node 
+ * 
  * ownSelector: new value of natty-selector value for instance of Prototpe Node 
  * being inserted
  *
@@ -157,6 +150,13 @@ BSD License
  * targetState: optional natty-selector value for instance of Prototpe Node to in
  * sert at in append and prepend modes targetState: optional natty-selector value
  * for instance of Prototpe Node to insert at in replace mode
+ * 
+ * if there no populated instances of Prototype Node exist (or if the Node's 
+ * innerHTML was deleted after or before populated instances of Prototype Node 
+ * were inserted) then append/prepend/replace will all replace the Node's 
+ * entire content (if targetSelector is supplied in this case it will throw 
+ * an error, so unless you are sure, you may want to call .$isPopulated() before 
+ * invoking this method with targetSelector or stateSelector options)
  *
  * nodeSelector: new value of natty-selector for the Node itself
  *
